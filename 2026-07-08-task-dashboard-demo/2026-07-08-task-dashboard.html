@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Codex 서브에이전트 작업 관리 대시보드</title>
+    <link rel="icon" href="data:," />
+    <link rel="stylesheet" href="./2026-07-08-task-dashboard.css" />
+    <script defer src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <script type="module" src="./2026-07-08-task-dashboard.js"></script>
+  </head>
+  <body>
+    <main class="app-shell">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">Codex Subagent Pilot</p>
+          <h1>작업 상태 하나로 전체 판단이 바뀌는 대시보드</h1>
+          <p>역할별 서브에이전트 산출물을 하나의 구현 데모로 통합한 촬영용 화면입니다.</p>
+        </div>
+        <button class="reset-button" type="button" data-reset>
+          <i data-lucide="rotate-ccw" aria-hidden="true"></i>
+          초기화
+        </button>
+      </header>
+
+      <section class="kpi-grid" aria-label="핵심 지표">
+        <article class="kpi-card">
+          <span>전체 작업</span>
+          <strong data-total>0</strong>
+          <small>역할별 산출물 기반</small>
+        </article>
+        <article class="kpi-card">
+          <span>완료율</span>
+          <strong data-completion>0%</strong>
+          <small>상태 변경 시 즉시 갱신</small>
+        </article>
+        <article class="kpi-card">
+          <span>활성 위험</span>
+          <strong data-risk-count>0</strong>
+          <small>완료되면 위험에서 제외</small>
+        </article>
+        <article class="kpi-card">
+          <span>이번 주 마감</span>
+          <strong data-due-week>0</strong>
+          <small>촬영 장면의 긴장도</small>
+        </article>
+      </section>
+
+      <section class="main-grid">
+        <section class="panel work-panel" aria-label="작업 보드">
+          <div class="section-header">
+            <h2>서브에이전트 데모 작업 보드</h2>
+            <div class="progress-wrap">
+              <div class="progress-top">
+                <span data-progress-label>완료 0/0</span>
+                <span>통합 진행률</span>
+              </div>
+              <div
+                class="progress-track"
+                role="progressbar"
+                aria-label="통합 진행률"
+                aria-valuemin="0"
+                aria-valuemax="100"
+                aria-valuenow="0"
+              >
+                <div class="progress-bar" data-progress-bar></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="board" data-board></div>
+        </section>
+
+        <aside class="side-stack" aria-label="상세 정보">
+          <section class="panel side-card" data-detail aria-label="선택 작업 상세"></section>
+
+          <section class="panel side-card">
+            <h2>위험 판단</h2>
+            <ul class="risk-list" data-risk-list></ul>
+          </section>
+
+          <section class="panel side-card">
+            <h2>역할별 서브에이전트 결과</h2>
+            <ul class="agent-list" data-agent-list></ul>
+          </section>
+
+          <section class="panel side-card">
+            <h2>활동 로그</h2>
+            <ul class="activity-list" data-activity></ul>
+          </section>
+        </aside>
+      </section>
+    </main>
+  </body>
+</html>
