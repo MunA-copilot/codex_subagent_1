@@ -2,6 +2,12 @@
   "title": "Codex Subagent 구현 데모",
   "voice": "ko-KR-HyunsuMultilingualNeural",
   "voice_rate": "-8%",
+  "font_family": "NanumSquare Neo",
+  "font_files": {
+    "regular": "NanumSquareNeo-bRg.ttf",
+    "bold": "NanumSquareNeo-cBd.ttf",
+    "extra_bold": "NanumSquareNeo-dEb.ttf"
+  },
   "scene_count": 8,
   "scene_durations_seconds": [
     28.68,
@@ -21,7 +27,7 @@
     "subtitles": "2026-07-08-codex-subagent-구현데모-자막.srt"
   },
   "file_sizes_bytes": {
-    "video": 5058289,
+    "video": 4985953,
     "narration": 4435724,
     "subtitles": 1093
   },

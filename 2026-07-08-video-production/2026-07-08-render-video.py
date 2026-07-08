@@ -205,25 +205,30 @@ COLORS = {
 
 
 def font(name: str, size: int) -> ImageFont.FreeTypeFont:
-    fonts_dir = Path("C:/Windows/Fonts")
+    font_dirs = [
+        Path.home() / "AppData/Local/Microsoft/Windows/Fonts",
+        Path("C:/Windows/Fonts"),
+    ]
     candidates = {
-        "regular": ["malgun.ttf", "NanumGothic.ttf", "arial.ttf"],
-        "bold": ["malgunbd.ttf", "NanumGothicBold.ttf", "arialbd.ttf"],
+        "regular": ["NanumSquareNeo-bRg.ttf", "NanumSquareNeoOTF-Rg.otf"],
+        "bold": ["NanumSquareNeo-cBd.ttf", "NanumSquareNeoOTF-Bd.otf"],
+        "extra_bold": ["NanumSquareNeo-dEb.ttf", "NanumSquareNeoOTF-Eb.otf"],
     }[name]
     for candidate in candidates:
-        path = fonts_dir / candidate
-        if path.exists():
-            return ImageFont.truetype(str(path), size)
-    return ImageFont.load_default()
+        for fonts_dir in font_dirs:
+            path = fonts_dir / candidate
+            if path.exists():
+                return ImageFont.truetype(str(path), size)
+    raise FileNotFoundError(f"NanumSquare Neo font not found for {name}: {candidates}")
 
 
-FONT_H1 = font("bold", 58)
-FONT_H2 = font("bold", 38)
+FONT_H1 = font("extra_bold", 58)
+FONT_H2 = font("extra_bold", 38)
 FONT_BODY = font("regular", 30)
 FONT_BODY_BOLD = font("bold", 30)
 FONT_SMALL = font("regular", 23)
 FONT_SMALL_BOLD = font("bold", 24)
-FONT_CAPTION = font("bold", 31)
+FONT_CAPTION = font("bold", 29)
 
 
 def text_size(draw: ImageDraw.ImageDraw, text: str, fnt: ImageFont.ImageFont) -> tuple[int, int]:
@@ -281,8 +286,8 @@ def draw_header(draw: ImageDraw.ImageDraw, scene: Scene, index: int) -> None:
 
 
 def draw_caption(draw: ImageDraw.ImageDraw, caption: str) -> None:
-    rounded(draw, (88, 918, 1832, 1018), COLORS["navy"], radius=18)
-    draw_wrapped(draw, (128, 945), caption, FONT_CAPTION, "#FFFFFF", 1660, line_gap=8)
+    rounded(draw, (88, 820, 1832, 910), COLORS["navy"], radius=18)
+    draw_wrapped(draw, (128, 846), caption, FONT_CAPTION, "#FFFFFF", 1660, line_gap=8)
 
 
 def draw_bullets(draw: ImageDraw.ImageDraw, bullets: tuple[str, ...], x: int, y: int, max_width: int) -> None:
@@ -292,14 +297,14 @@ def draw_bullets(draw: ImageDraw.ImageDraw, bullets: tuple[str, ...], x: int, y:
 
 
 def draw_problem(draw: ImageDraw.ImageDraw, scene: Scene) -> None:
-    rounded(draw, (92, 230, 760, 820), COLORS["panel"], COLORS["line"], radius=18)
+    rounded(draw, (92, 230, 760, 742), COLORS["panel"], COLORS["line"], radius=18)
     draw.text((140, 278), "한 대화에 섞이는 일", font=FONT_H2, fill=COLORS["ink"])
     for i, item in enumerate(["아이디어", "평가", "구현", "테스트", "디자인"]):
         y = 360 + i * 72
         rounded(draw, (140, y, 660, y + 48), "#F1EFE9", radius=12)
         draw.text((166, y + 7), item, font=FONT_SMALL_BOLD, fill=COLORS["muted"])
     draw.text((842, 494), "->", font=FONT_H1, fill=COLORS["blue"])
-    rounded(draw, (1010, 230, 1830, 820), COLORS["panel"], COLORS["line"], radius=18)
+    rounded(draw, (1010, 230, 1830, 742), COLORS["panel"], COLORS["line"], radius=18)
     draw.text((1060, 278), "역할별로 나누기", font=FONT_H2, fill=COLORS["ink"])
     roles = [("기획자", COLORS["blue"]), ("평가자", COLORS["red"]), ("개발자", COLORS["green"]), ("보조 개발자", COLORS["yellow"]), ("디자이너", COLORS["teal"])]
     for i, (role, color) in enumerate(roles):
@@ -307,7 +312,9 @@ def draw_problem(draw: ImageDraw.ImageDraw, scene: Scene) -> None:
         y = 374 + (i // 2) * 120
         rounded(draw, (x, y, x + 300, y + 82), "#F8FAFC", color, width=3, radius=16)
         draw.text((x + 26, y + 22), role, font=FONT_BODY_BOLD, fill=COLORS["ink"])
-    draw_bullets(draw, scene.bullets, 120, 760, 720)
+    summary = " / ".join(["판단 분리", "역할 기준", "메인 통합"])
+    rounded(draw, (285, 770, 1635, 804), "#EAF2FF", COLORS["blue"], radius=14)
+    draw.text((546, 775), summary, font=FONT_SMALL_BOLD, fill=COLORS["blue"])
 
 
 def draw_threads(draw: ImageDraw.ImageDraw, scene: Scene) -> None:
@@ -350,8 +357,8 @@ def draw_planner_evaluator(draw: ImageDraw.ImageDraw, scene: Scene) -> None:
     draw_bullets(draw, ("후보 아이디어 5개", "화면 변화가 보이는 데모", "재사용 가능한 구조"), 150, 380, 430)
     draw_bullets(draw, ("구현 난이도", "영상 전달력", "과장 위험"), 740, 380, 430)
     draw_bullets(draw, ("작업 관리 대시보드 선택", "역할 결과를 하나로 정리", "실제 동작 확인"), 1330, 380, 430)
-    rounded(draw, (692, 794, 1228, 850), "#FFF7E6", COLORS["yellow"], radius=16)
-    draw.text((728, 808), "넓게 제안 -> 냉정하게 평가 -> 하나로 결정", font=FONT_SMALL_BOLD, fill=COLORS["ink"])
+    rounded(draw, (692, 748, 1228, 800), "#FFF7E6", COLORS["yellow"], radius=16)
+    draw.text((728, 761), "넓게 제안 -> 냉정하게 평가 -> 하나로 결정", font=FONT_SMALL_BOLD, fill=COLORS["ink"])
 
 
 def draw_parallel(draw: ImageDraw.ImageDraw, scene: Scene) -> None:
@@ -367,7 +374,7 @@ def draw_parallel(draw: ImageDraw.ImageDraw, scene: Scene) -> None:
         draw_wrapped(draw, (x + 42, 390), desc, FONT_BODY, COLORS["muted"], 410)
         rounded(draw, (x + 42, 560, x + 458, 622), "#F8FAFC", "#DDE3EA", radius=14)
         draw.text((x + 74, 576), "자기 역할 결과만 작성", font=FONT_SMALL_BOLD, fill=COLORS["ink"])
-    draw.text((830, 785), "동시에 다른 관점 확보", font=FONT_H2, fill=COLORS["blue"])
+    draw.text((830, 765), "동시에 다른 관점 확보", font=FONT_H2, fill=COLORS["blue"])
 
 
 def draw_integration(draw: ImageDraw.ImageDraw, scene: Scene) -> None:
@@ -378,13 +385,13 @@ def draw_integration(draw: ImageDraw.ImageDraw, scene: Scene) -> None:
         draw.text((x + 40, 360), step, font=FONT_SMALL_BOLD, fill=COLORS["ink"])
         if i < len(steps) - 1:
             draw.text((x + 265, 350), "->", font=FONT_BODY_BOLD, fill=COLORS["blue"])
-    rounded(draw, (250, 560, 1670, 802), COLORS["panel"], COLORS["line"], radius=20)
+    rounded(draw, (250, 560, 1670, 790), COLORS["panel"], COLORS["line"], radius=20)
     draw.text((300, 610), "저장되는 템플릿", font=FONT_H2, fill=COLORS["ink"])
-    draw_bullets(draw, scene.bullets, 320, 686, 1250)
+    draw_bullets(draw, scene.bullets, 320, 674, 1250)
 
 
 def draw_dashboard(draw: ImageDraw.ImageDraw, scene: Scene) -> None:
-    rounded(draw, (110, 238, 1810, 810), "#FFFFFF", "#D7DDE5", radius=22)
+    rounded(draw, (110, 238, 1810, 790), "#FFFFFF", "#D7DDE5", radius=22)
     draw.text((160, 286), "작업 관리 대시보드", font=FONT_H2, fill=COLORS["ink"])
     stats = [("완료율", "17% -> 33%", COLORS["blue"]), ("활성 위험", "1 -> 0", COLORS["red"]), ("상태 변경", "위험 -> 완료", COLORS["green"])]
     for i, (label, value, color) in enumerate(stats):
@@ -397,11 +404,11 @@ def draw_dashboard(draw: ImageDraw.ImageDraw, scene: Scene) -> None:
     draw.text((190, 604), "완료율 증가", font=FONT_SMALL_BOLD, fill="#FFFFFF")
     rounded(draw, (1210, 570, 1660, 692), "#EAF8F1", COLORS["green"], radius=18)
     draw.text((1248, 608), "공개 저장소 보안 점검: 완료", font=FONT_SMALL_BOLD, fill=COLORS["green"])
-    draw_bullets(draw, scene.bullets, 190, 725, 1200)
+    draw_bullets(draw, scene.bullets, 190, 704, 1200)
 
 
 def draw_outputs(draw: ImageDraw.ImageDraw, scene: Scene) -> None:
-    rounded(draw, (150, 255, 1770, 806), COLORS["panel"], COLORS["line"], radius=22)
+    rounded(draw, (150, 255, 1770, 790), COLORS["panel"], COLORS["line"], radius=22)
     draw.text((210, 305), "재사용 가능한 폴더 구조", font=FONT_H2, fill=COLORS["ink"])
     rows = [
         (".codex/agents", "역할별 서브에이전트 설정"),
@@ -410,7 +417,7 @@ def draw_outputs(draw: ImageDraw.ImageDraw, scene: Scene) -> None:
         ("video-production", "MP4, 내레이션, 자막, 제작정보"),
     ]
     for i, (folder, desc) in enumerate(rows):
-        y = 400 + i * 84
+        y = 394 + i * 78
         rounded(draw, (220, y, 1680, y + 56), "#F8FAFC", "#E0E6ED", radius=14)
         draw.text((250, y + 12), folder, font=FONT_SMALL_BOLD, fill=COLORS["blue"])
         draw.text((690, y + 12), desc, font=FONT_SMALL, fill=COLORS["ink"])
@@ -432,7 +439,7 @@ def draw_summary(draw: ImageDraw.ImageDraw, scene: Scene) -> None:
         draw.text((x + 72, 540), title, font=FONT_BODY_BOLD, fill=COLORS["ink"])
     draw_wrapped(
         draw,
-        (330, 735),
+        (330, 716),
         "복잡한 작업을 더 설명 가능하고, 더 검토 가능하고, 다음 프로젝트에 다시 쓸 수 있는 방식으로 바꿉니다.",
         FONT_BODY,
         COLORS["muted"],
@@ -594,6 +601,12 @@ def write_manifest(ffmpeg: str, durations: list[float]) -> None:
         "title": "Codex Subagent 구현 데모",
         "voice": VOICE,
         "voice_rate": VOICE_RATE,
+        "font_family": "NanumSquare Neo",
+        "font_files": {
+            "regular": "NanumSquareNeo-bRg.ttf",
+            "bold": "NanumSquareNeo-cBd.ttf",
+            "extra_bold": "NanumSquareNeo-dEb.ttf",
+        },
         "scene_count": len(SCENES),
         "scene_durations_seconds": [round(value, 2) for value in durations],
         "video_duration_seconds": round(video_duration, 2),
