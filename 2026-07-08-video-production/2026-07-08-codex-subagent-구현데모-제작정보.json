@@ -8,6 +8,7 @@
     "bold": "NanumSquareNeo-cBd.ttf",
     "extra_bold": "NanumSquareNeo-dEb.ttf"
   },
+  "visual_design": "product-demo-app-shell-v2",
   "scene_count": 8,
   "scene_durations_seconds": [
     28.68,
@@ -27,7 +28,7 @@
     "subtitles": "2026-07-08-codex-subagent-구현데모-자막.srt"
   },
   "file_sizes_bytes": {
-    "video": 4985953,
+    "video": 5656378,
     "narration": 4435724,
     "subtitles": 1093
   },
